@@ -94,6 +94,18 @@ public class Token {
         return new Token(TokenType.IntLiteral, name);
     }
 
+    public static Token mkCharLiteral (String name) {
+        return new Token(TokenType.CharLiteral, name);
+    }
+
+    public static Token mkStringLiteral (String name) {
+        return new Token(TokenType.StringLiteral, name);
+    }
+
+    public static Token mkDoubleLiteral (String name) {
+        return new Token(TokenType.DoubleLiteral, name);
+    }
+
     public String toString ( ) {
         if (type.compareTo(TokenType.Identifier) < 0) return value;
         return "Token -----> " +  value + "(" + type + ", " + value;

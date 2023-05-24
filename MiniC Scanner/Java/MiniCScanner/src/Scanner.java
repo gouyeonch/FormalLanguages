@@ -57,7 +57,8 @@ public class Scanner {
                 String spelling = concat(letters + digits + '_');
                 return Token.keyword(spelling);
             } else if (isDigit(ch)) { // int literal
-                String number = concat(digits);
+                String number = concat(digits + '.');
+                if(number.contains(".") ) return Token.mkDoubleLiteral(number); //이어 붙여진 문자열에 소수점이 포함되어있으면 실수형으로 인식
                 return Token.mkIntLiteral(number);
             } else switch (ch) {
             case ' ': case '\t': case '\r': case eolnCh:
@@ -152,7 +153,8 @@ public class Scanner {
             case '}': ch = nextChar();
             return Token.rightBraceTok;
 
-            case ';': ch = nextChar();
+            case ';': 
+            ch = nextChar();
             return Token.semicolonTok;
 
             case ':': ch = nextChar();
@@ -177,7 +179,20 @@ public class Scanner {
             case '!':
                 return chkOpt('=', Token.notTok,
                                    Token.noteqTok);
-
+            case '\'' :
+                ch = nextChar();
+                nextChar();
+                nextChar();
+                return Token.mkCharLiteral("'" + ch + "'");
+            case '"' :
+                String str = "";
+                ch = nextChar();
+                while(ch != '"') {
+                    str = str + ch;
+                    ch = nextChar();
+                }
+                ch = nextChar();
+                return Token.mkStringLiteral('\"' + str + '\"');
             default:  error("Illegal character " + ch); 
             } // switch
         } while (true);
