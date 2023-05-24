@@ -180,10 +180,11 @@ public class Scanner {
                 return chkOpt('=', Token.notTok,
                                    Token.noteqTok);
             case '\'' :
+                char ch1;
+                ch1 = nextChar();
+                nextChar();
                 ch = nextChar();
-                nextChar();
-                nextChar();
-                return Token.mkCharLiteral("'" + ch + "'");
+                return Token.mkCharLiteral("'" + ch1 + "'");
             case '"' :
                 String str = "";
                 ch = nextChar();
