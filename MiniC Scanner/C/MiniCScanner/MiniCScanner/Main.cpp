@@ -14,7 +14,7 @@ FILE *ucodeFile;                        // ucode file
 
 #define FILE_LEN 30
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	char fileName[FILE_LEN];
 	int err;
@@ -59,6 +59,8 @@ void main(int argc, char *argv[])
 
 	//codeGen(root);
 	printf(" *** end   of Mini C Compiler\n");
+
+	return 0;
 } // end of main
 
 void icg_error(int n)

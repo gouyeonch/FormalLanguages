@@ -36,11 +36,11 @@ char *tokenName[] = {
 	"while",    "{",        "||",       "}"
 };
 
-char *keyword[NO_KEYWORD] = {
+char *keyword[NO_KEYWORD] = { 
 	"const",  "else",    "if",    "int",    "return",  "void",    "while"
 };
 
-enum tsymbol tnum[NO_KEYWORD] = {
+enum tsymbol tnum[NO_KEYWORD] = { 
 	tconst,    telse,     tif,     tint,     treturn,   tvoid,     twhile
 };
 
@@ -54,41 +54,49 @@ struct tokenType scanner()
 
 	do {
 		while (isspace(ch = fgetc(sourceFile)));	// state 1: skip blanks
-		if (superLetter(ch)) { // identifier or keyword
+
+		if (superLetter(ch)) { // identifier or keyword 첫 글자가 문자이면 식별자나 키워드임
 			i = 0;
+
+			//단어가 몇 글자인지 계산
 			do {
 				if (i < ID_LENGTH) id[i++] = ch;
 				ch = fgetc(sourceFile);
 			} while (superLetterOrDigit(ch));
+
+			//만약 제한한 글자 수를 넘으면 에러 발생
 			if (i >= ID_LENGTH) lexicalError(1);
 			id[i] = '\0';
 			ungetc(ch, sourceFile);  //  retract
 									 // find the identifier in the keyword table
+
+			//해당 단어가 키워드면 enum값을 index에 저장하는 반복문
 			for (index = 0; index < NO_KEYWORD; index++)
 				if (!strcmp(id, keyword[index])) break;
-			if (index < NO_KEYWORD)    // found, keyword exit
+			if (index < NO_KEYWORD)    // found, keyword exit 해당 조건을 만족하면 키워드임 해당 enum값을 저장함
 				token.number = tnum[index];
-			else {                     // not found, identifier exit
+			else {                     // not found, identifier exit 해당 조건을 만족하면 식별자임 식별자 enum값을 저장함 그리고 id 값도 초기화해줌
 				token.number = tident;
 				strcpy_s(token.value.id, id);
 			}
 		}  // end of identifier or keyword
-		else if (isdigit(ch)) {  // number
+		else if (isdigit(ch)) {  // number 첫 글자가 숫자이면 숫자임
 			token.number = tnumber;
 			token.value.num = getNumber(ch);
 		}
-		else switch (ch) {  // special character
+		else 
+		switch (ch) {  // special character 특수문자
 		case '/':
 			ch = fgetc(sourceFile);
-			if (ch == '*')			// text comment
+			if (ch == '*')			// text comment 텍스트 형태의 주석이므로 다시 */가 나올때까지 문자를 스킵한다
 				do {
 					while (ch != '*') ch = fgetc(sourceFile);
 					ch = fgetc(sourceFile);
 				} while (ch != '/');
-			else if (ch == '/')		// line comment
+			else if (ch == '/')		// line comment 한 라인 형태의 주석이므로 개행문자가 나올때까지 문자를 스킵한다
 				while (fgetc(sourceFile) != '\n');
-			else if (ch == '=')  token.number = tdivAssign;
-			else {
+			else if (ch == '=')  token.number = tdivAssign; // 나눗셈과 할당을 같이하는 문장
+			else { //나눗셈 연산식
 				token.number = tdiv;
 				ungetc(ch, sourceFile); // retract
 			}

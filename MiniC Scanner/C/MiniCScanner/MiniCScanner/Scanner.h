@@ -7,7 +7,7 @@
 
 
 #define NO_KEYWORD 7
-#define ID_LENGTH 12
+#define ID_LENGTH 12 // 단어의 길이는 11글자로 제한한다 (마지막은 null)
 
 struct tokenType {
 	int number;

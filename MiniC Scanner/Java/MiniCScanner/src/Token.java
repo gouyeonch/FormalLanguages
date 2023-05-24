@@ -51,6 +51,7 @@ public class Token {
     private Token (TokenType t, String v) {
         type = t;
         value = v;
+        //만약 eof가 아니면
         if (t.compareTo(TokenType.Eof) < 0) {
             int ti = t.ordinal();
             reserved[ti] = v;
@@ -64,9 +65,12 @@ public class Token {
 
     public static Token keyword  ( String name ) {
         char ch = name.charAt(0);
+        // 대문자로 시작하면 바로 식별자로 판별
         if (ch >= 'A' && ch <= 'Z') return mkIdentTok(name);
+        // reserved 배열의 값과 비교해서 키워드인지 식별
         for (int i = 0; i < KEYWORDS; i++)
            if (name.equals(reserved[i]))  return token[i];
+        //키워드로 식별되지 않으면 식별자로 판별
         return mkIdentTok(name);
     } // keyword
 

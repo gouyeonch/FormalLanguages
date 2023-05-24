@@ -7,7 +7,7 @@ public class Scanner {
     private BufferedReader input;
     private String line = "";
     private int lineno = 0;
-    private int col = 1;
+    private int col = 0;
     private final String letters = "abcdefghijklmnopqrstuvwxyz"
         + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private final String digits = "0123456789";
@@ -30,6 +30,7 @@ public class Scanner {
         if (ch == eofCh)
             error("Attempt to read past end of file");
         col++;
+        // 만약 읽으려는 라인의 문자개수보다 접근하려는 인덱스가 크면 다음 라인을 탐색해야한다
         if (col >= line.length()) {
             try {
                 line = input.readLine( );
@@ -41,10 +42,10 @@ public class Scanner {
                 line = "" + eofCh;
             else {
                 // System.out.println(lineno + ":\t" + line);
-                lineno++;
+                lineno++; // 이거 왜 있는거지
                 line += eolnCh;
             } // if line
-            col = 0;
+            col = 0; // 라인의 맨 처음 문자부터 반환해줘야함
         } // if col
         return line.charAt(col);
     }
@@ -203,6 +204,7 @@ public class Scanner {
         return two;
     }
 
+    // 흩어진 문자들을 set에 있는 문자들로 이루어진 단어로 만들어서 반환
     private String concat(String set) {
         String r = "";
         do {
