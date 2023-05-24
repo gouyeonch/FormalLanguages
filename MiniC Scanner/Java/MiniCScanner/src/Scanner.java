@@ -75,19 +75,45 @@ public class Scanner {
                 // divide
                 if (ch != '*' && ch != '/') return Token.divideTok;
                 
-                // multi line comment
                 if (ch == '*') { 
-    				do {
-    					while (ch != '*') ch = nextChar();
-    					ch = nextChar();
-    				} while (ch != '/');
-    				ch = nextChar();
+                    char ch1;
+                    if ((ch1 = nextChar()) == '*'){ // documented comment
+                        String comment = "";
+                        do {
+                            while (ch1 != '*') {
+                                comment = comment + ch1;
+                                ch1 = nextChar();
+                            }
+                            ch1 = nextChar();
+                        } while (ch1 != '/');
+                        System.out.printf("Documented Comments -----> " + comment);
+                        ch = nextChar();
+                    }
+                    else // multi line comment
+                    {
+                        do {
+                            while (ch != '*') ch = nextChar();
+                            ch = nextChar();
+                        } while (ch != '/');
+                        ch = nextChar();
+                    }
                 }
-                // single line comment
                 else if (ch == '/')  {
-	                do {
-	                    ch = nextChar();
-	                } while (ch != eolnCh);
+                    char ch1;
+                    ch = nextChar();
+                    if(ch == '/'){ // single line documented comment
+                        String comment = "";
+                        do {
+                            ch1 = nextChar();
+                            comment = comment + ch1;
+                        } while (ch1 != eolnCh);
+                        System.out.printf("Documented Comments -----> " + comment);
+                    }
+                    else{
+                        while (ch != eolnCh) {  // single line comment
+                            ch = nextChar();
+                        }
+                    }
 	                ch = nextChar();
                 }
                 
@@ -194,7 +220,9 @@ public class Scanner {
                 }
                 ch = nextChar();
                 return Token.mkStringLiteral('\"' + str + '\"');
-            default:  error("Illegal character " + ch); 
+            default:  
+                error("Illegal character " + ch); 
+                ch = nextChar();
             } // switch
         } while (true);
     } // next
@@ -236,7 +264,6 @@ public class Scanner {
     public void error (String msg) {
         System.err.print(line);
         System.err.println("Error: column " + col + " " + msg);
-        System.exit(1);
     }
 
     static public void main ( String[] argv ) {
