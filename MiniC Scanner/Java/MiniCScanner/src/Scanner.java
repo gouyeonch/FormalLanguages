@@ -42,7 +42,7 @@ public class Scanner {
                 line = "" + eofCh;
             else {
                 // System.out.println(lineno + ":\t" + line);
-                lineno++; // 이거 왜 있는거지
+                lineno++;
                 line += eolnCh;
             } // if line
             col = 0; // 라인의 맨 처음 문자부터 반환해줘야함
@@ -155,6 +155,9 @@ public class Scanner {
             case ';': ch = nextChar();
             return Token.semicolonTok;
 
+            case ':': ch = nextChar();
+            return Token.bitFieldAssignTok;
+
             case ',': ch = nextChar();
             return Token.commaTok;
                 
@@ -224,7 +227,8 @@ public class Scanner {
         Scanner lexer = new Scanner(argv[0]);
         Token tok = lexer.next( );
         while (tok != Token.eofTok) {
-            System.out.println(tok.toString());
+            // 출력 형식에 맞게 변경
+            System.out.println("Token -----> " +  tok.value() + " (" + tok.type() + ", " + tok.value()+ ", " + lexer.lineno + ", " + lexer.col + ")");
             tok = lexer.next( );
         } 
     } // main
